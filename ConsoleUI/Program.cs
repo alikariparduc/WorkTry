@@ -41,7 +41,7 @@ namespace ConsoleUI
         }
         
 
-    /////LINQ///////
+    /////LINQ//////s/
     //List<Category> _Category = new List<Category>
     //{
     //    new Category{CategoryId=100,CategoryName="Jeep"},
