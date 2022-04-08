@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +54,11 @@ namespace DataAccess.Concrete.InMemoryDal
             return _cars.Where(c => c.BrandId == brandId).ToList();
         }
 
+        public List<CarDetailDto> GetCarDetails()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Update(Car car)
         {
             Car carToUpdate = _cars.SingleOrDefault(c => c.Id == car.Id);
@@ -61,6 +68,11 @@ namespace DataAccess.Concrete.InMemoryDal
             carToUpdate.ModelYear = car.ModelYear;
             carToUpdate.DailyPrice = car.DailyPrice;
             carToUpdate.Description = car.Description;
+        }
+
+        Car IEntityRepository<Car>.Get(Expression<Func<Car, bool>> filter)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -3,6 +3,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EfMemoryDal;
 using DataAccess.Concrete.InMemoryDal;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,7 +19,14 @@ namespace Business.Concrete
         }
         public void Add(Car car)
         {
-            _carDal.Add(car);
+            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+            {
+                _carDal.Add(car);
+            }
+            else
+            {
+                Console.WriteLine("Araç Açıklaması En az 2 Karakterden oluşmalı Ve Kiralama Bedeli 0'dan büyük olmalıdır.");
+            }
         }
 
         public void Delete(Car car)
@@ -31,19 +39,24 @@ namespace Business.Concrete
             return _carDal.GetAll();
         }
 
-        public List<Car> GetBrandIdAll(int brandId)
+        public List<CarDetailDto> GetCarDetails()
         {
-            throw new NotImplementedException();
+            return _carDal.GetCarDetails();
+        }
+
+        public List<Car> GetCarsByColorId(int id)
+        {
+            return _carDal.GetAll(c => c.ColorId == id);
         }
 
         public List<Car> GettAllByBrandId(int id)
         {
-            throw new NotImplementedException();
+            return _carDal.GetAll(c => c.BrandId == id);
         }
 
         public void Update(Car car)
         {
-            throw new NotImplementedException();
+             _carDal.Update(car);
         }
     }
 }

@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,37 +10,25 @@ using System.Text;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfCarDal : ICarDal
+    public class EfCarDal : EfEntityRepositoryBase<Car, SqlServerDbContext>, ICarDal
     {
-        public void Add(Car entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Delete(Car entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Car> Get(Expression<Func<Car, bool>> filter)
-        {
-            throw new NotImplementedException();
-        }
-
-        public List<Car> GetAll(Expression<Func<Car, bool>> filter = null)
+        public List<CarDetailDto> GetCarDetails()
         {
             using (SqlServerDbContext context = new SqlServerDbContext())
             {
+                var result = from c in context.Car
+                             join b in context.Brands on c.BrandId equals b.Id
+                             join cl in context.Colors on c.ColorId equals cl.Id
+                             select new CarDetailDto
+                             {
+                                 CarId = c.Id,
+                                 CarBrandName = b.BrandName,
+                                 CarColor = cl.ColorName,
+                                 Description=c.Description
 
-
-                return filter == null ? context.Set<Car>().ToList() : context.Set<Car>().Where(filter).ToList();
-
+                             };
+                return result.ToList();
             }
-        }
-
-        public void Update(Car entity)
-        {
-            throw new NotImplementedException();
         }
     }
 }
