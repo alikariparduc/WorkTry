@@ -1,4 +1,5 @@
 ﻿using Business.Concrete;
+using Core.Utilities.Result.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemoryDal;
@@ -13,10 +14,55 @@ namespace ConsoleUI
     {
         static void Main(string[] args)
         {
-            //CarGetAllTest();
+            //Car car = new Car();
+            //car.BrandId = 3;
+            //car.ColorId = 3;
+            //car.ModelYear = 2020;
+            //car.DailyPrice = 500;
+            //car.Description="l";
+            //car.ModelId = 2;
 
-            CarDtoTest();
+            //CarManager carManager = new CarManager(new EfCarDal());
+            //carManager.Add(car);
+            //Console.WriteLine(carManager);
+            
+            CarGetAllTest();
 
+            //CarDtoTest();
+
+            //CustomerGetAllTest();
+
+            
+
+            //Customer customer = new Customer();
+            ////customer.CustomerId = 3;
+            //customer.FirstName = "Gizem";
+            //customer.LastName = "Kariparduç";
+            //customer.Adress = "Ademyavuz mahallesi";
+            //customer.City = "İstanbul";
+            //customer.Country = "Türkiye";
+            //customer.Phone = "5061725684";
+            //customer.Mail = "gizemkariparduc@hotmail.com";
+            //CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            //customerManager.Add(customer);
+
+        }
+
+        private static void CustomerGetAllTest()
+        {
+            CustomerManager customerManager = new CustomerManager(new EfCustomerDal());
+            foreach (var customer in customerManager.GetAll())
+            {
+                Console.WriteLine(" ID : " + customer.CustomerId);
+                Console.WriteLine(" Ad  : " + customer.FirstName);
+                Console.WriteLine(" Soyad : " + customer.LastName);
+                Console.WriteLine(" Adres : " + customer.Adress);
+                Console.WriteLine(" Şehir : " + customer.City);
+                Console.WriteLine(" Ülke : " + customer.Country);
+                Console.WriteLine(" Numara  : " + customer.Phone);
+                Console.WriteLine(" Mail : " + customer.Mail);
+                Console.WriteLine("-------------------------------");
+            }
         }
 
         private static void CarDtoTest()
@@ -24,16 +70,25 @@ namespace ConsoleUI
             CarManager carManager = new CarManager(new EfCarDal());
             foreach (var carDto in carManager.GetCarDetails())
             {
-                Console.WriteLine("Car ID :  " + carDto.CarId + " --  Car Brand : " + carDto.CarBrandName + " -- Car Color : " + carDto.CarColor);
+                Console.WriteLine("Car ID :  " + carDto.CarId + " --  Car Brand : " + carDto.CarBrandName + " -- Car Model " + carDto.CarModelName + " -- Car Color : " + carDto.CarColor);
             }
         }
 
         private static void CarGetAllTest()
         {
             CarManager carManager = new CarManager(new EfCarDal());
-            foreach (var car in carManager.GetAll())
+            var result = carManager.GetAll();
+            if (result.Success==true)
             {
-                Console.WriteLine(car.Description);
+                foreach (var car in result.Data)
+                {
+                    Console.WriteLine(car.Description);
+                }
+                Console.WriteLine(result.Message);
+            }
+            else
+            {
+                Console.WriteLine(result.Message);
             }
         }
 

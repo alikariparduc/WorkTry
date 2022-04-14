@@ -21,6 +21,7 @@ namespace Core.DataAccess.EntityFramework
                 var addetEntity = context.Entry(entity);// Veri kaynağına göndereceğim değeri ilişkilendir.
                 addetEntity.State = EntityState.Added; //? araştır
                 context.SaveChanges();
+                int sonuc = context.SaveChanges(); 
 
             }
         }

@@ -1,4 +1,9 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Core.Utilities.Abstract;
+using Core.Utilities.Abstract.Result;
+using Core.Utilities.Result.Abstract;
+using Core.Utilities.Result.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EfMemoryDal;
 using DataAccess.Concrete.InMemoryDal;
@@ -17,27 +22,38 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
-        public void Add(Car car)
+        public IResult Add(Car car)
         {
-            if (car.Description.Length >= 2 && car.DailyPrice > 0)
+            if (car.Description.Length<2)
             {
+                return new ErrorResult(Messages.InvalidMessage);
+            }
+            
                 _carDal.Add(car);
-            }
-            else
-            {
-                Console.WriteLine("Araç Açıklaması En az 2 Karakterden oluşmalı Ve Kiralama Bedeli 0'dan büyük olmalıdır.");
-            }
+                //return new Result(true,"Kayıt Başarılı.");
+                return new SuccessResult(Messages.AddedMessage);
+            
+               
+
         }
 
-        public void Delete(Car car)
+        public IResult Delete(Car car)
         {
             _carDal.Delete(car);
+            return new Result(true, "Silme İşlemi Başarılı.");
         }
 
-        public List<Car> GetAll()
-        {
-            return _carDal.GetAll();
-        }
+        
+            public IDataResult<List<Car>> GetAll()
+            {
+                if (DateTime.Now.Hour == 13)
+                {
+                    return new ErrorDataResult<List<Car>>(default,Messages.MaintenanceTimeMessage);
+                }
+                return new SuccessDataResult<List<Car>>(_carDal.GetAll(), Messages.ListedMessage);
+
+            }
+        
 
         public List<CarDetailDto> GetCarDetails()
         {
@@ -51,12 +67,16 @@ namespace Business.Concrete
 
         public List<Car> GettAllByBrandId(int id)
         {
+            
             return _carDal.GetAll(c => c.BrandId == id);
         }
 
-        public void Update(Car car)
+        public IResult Update(Car car)
         {
              _carDal.Update(car);
+            return new Result(true, "Güncelleme  Başarılı.");
         }
+
+      
     }
 }
