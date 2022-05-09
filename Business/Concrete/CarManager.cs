@@ -1,5 +1,8 @@
 ﻿using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Abstract;
 using Core.Utilities.Abstract.Result;
 using Core.Utilities.Result.Abstract;
@@ -9,6 +12,7 @@ using DataAccess.Concrete.EfMemoryDal;
 using DataAccess.Concrete.InMemoryDal;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -22,13 +26,17 @@ namespace Business.Concrete
         {
             _carDal = carDal;
         }
+        [ValidationAspect(typeof(CarValidator))]
         public IResult Add(Car car)
         {
-            if (car.Description.Length<2)
-            {
-                return new ErrorResult(Messages.InvalidMessage);
-            }
-            
+            //if (car.Description.Length<2)
+            //{
+            //    return new ErrorResult(Messages.InvalidMessage);
+            //}
+
+            ValidationTool.Validate(new CarValidator(), car); // Validasyon işlemi burada 
+          
+
                 _carDal.Add(car);
                 //return new Result(true,"Kayıt Başarılı.");
                 return new SuccessResult(Messages.AddedMessage);
