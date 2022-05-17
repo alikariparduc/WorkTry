@@ -16,7 +16,7 @@ namespace DataAccess.Concrete.EntityFramework
         {
             using (SqlServerDbContext context = new SqlServerDbContext())
             {
-                var result = from c in context.Car
+                var result = from c in context.Cars
                              join b in context.Brands on c.BrandId equals b.Id
                              join cl in context.Colors on c.ColorId equals cl.Id
                              join m in context.Models on c.ModelId equals m.ModelId

@@ -1,4 +1,10 @@
 ﻿using Business.Abstract;
+using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.Utilities.Abstract.Result;
+using Core.Utilities.Result.Abstract;
+using Core.Utilities.Result.Concrete;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
@@ -12,7 +18,6 @@ namespace Business.Concrete
     public class CustomerManager : ICustomerService
     {
         ICustomerDal _customerDal;
-        SqlServerDbContext sqlServerDbContext = new SqlServerDbContext();
         
 
         public CustomerManager(ICustomerDal customerDal)
@@ -20,18 +25,22 @@ namespace Business.Concrete
             _customerDal = customerDal;
         }
 
-        public void Add(Customer customer)
+        [ValidationAspect(typeof(CustomerValidator))]
+        public IResult Add(Customer customer)
         {
-            if (_customerDal.GetAll(c => c.Mail == customer.Mail).Count == 0)
-            {
+            //if (_customerDal.GetAll(c => c.Mail == customer.Mail).Count == 0)
+            //{
 
-                _customerDal.Add(customer);
-                Console.WriteLine("Kayıt Tamamlandı");
-            }
-            else
-            {
-                Console.WriteLine("Mail adresi sistemde kayıtlı. Giriş yapmayı deneyiniz.");
-            }
+            //    _customerDal.Add(customer);
+            //    Console.WriteLine("Kayıt Tamamlandı");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("Mail adresi sistemde kayıtlı. Giriş yapmayı deneyiniz.");
+            //}
+
+            _customerDal.Add(customer);
+            return new SuccessResult(Messages.AddedMessage);
         }
 
         public void Delete(Customer customer)
@@ -40,9 +49,9 @@ namespace Business.Concrete
             Console.WriteLine("Müşteri veritabanından silindi!!");
         }
 
-        public List<Customer> GetAll()
+        public IDataResult<List<Customer>> GetAll()
         {
-            return _customerDal.GetAll();
+            return new SuccessDataResult<List<Customer>>(_customerDal.GetAll(), Messages.ListedMessage);
         }
     }
 }

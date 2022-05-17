@@ -18,6 +18,8 @@ namespace Business.DependencyResolvers.Autofac
         {
             builder.RegisterType<CarManager>().As<ICarService>().SingleInstance(); // Biri senden ICarSErvice isterse ona newleyip CarManager ver.
             builder.RegisterType<EfCarDal>().As<ICarDal>().SingleInstance(); // Biri senden ICarDal isterse ona newleyip EfCarDal ver.
+            builder.RegisterType<CustomerManager>().As<ICustomerService>().SingleInstance();
+            builder.RegisterType<EfCustomerDal>().As<ICustomerDal>().SingleInstance();
             
             
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
